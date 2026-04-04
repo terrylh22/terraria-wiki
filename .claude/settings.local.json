@@ -47,7 +47,31 @@
       "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(f''''{len\\(d\\)} stations''''\\); print\\(json.dumps\\(d[:3], indent=2\\)\\)\")",
       "Bash(npm run:*)",
       "Bash(node:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://terraria.wiki.gg/images/Player.png\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://terraria.wiki.gg/images/Terraria_character.png\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://terraria.wiki.gg/images/Characters.png\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://terraria.wiki.gg/images/Male_Player.png\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://terraria.wiki.gg/images/Player_male.png\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://terraria.wiki.gg/images/Guide.png\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://terraria.wiki.gg/images/Terrarian.png\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://terraria.wiki.gg/images/Hero.png\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://terraria.wiki.gg/images/PC_character.png\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://terraria.wiki.gg/images/Player_walking.gif\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://terraria.wiki.gg/images/Default_Male_Character.png\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://terraria.wiki.gg/images/Character_sprite.png\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://terraria.wiki.gg/images/Terraria_player.png\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://terraria.wiki.gg/images/NPC_53.png\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://terraria.wiki.gg/images/Guide_Head.png\")",
+      "Bash(curl -s \"https://terraria.wiki.gg/wiki/Guide\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://terraria.wiki.gg/images/Guide_%28portrait%29.png\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://terraria.wiki.gg/images/Terrarian_%28character%29.png\")",
+      "Bash(curl -s \"https://terraria.wiki.gg/wiki/Terraria\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://terraria.wiki.gg/images/Player_in_Forest.png\")",
+      "Bash(curl -s \"https://terraria.wiki.gg/wiki/Player\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://terraria.wiki.gg/images/ColorCharacter.png\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://terraria.wiki.gg/images/ClothStyleMale.png\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://terraria.wiki.gg/images/CharInfo.png\")"
     ]
   }
 }

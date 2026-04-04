@@ -19,7 +19,7 @@ export default function RootLayout() {
         <StatusBar style="light" />
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="(tabs)" />
-          <Stack.Screen name="items"         options={{ ...headerOptions, headerTitle: 'Items' }} />
+          <Stack.Screen name="items"         options={{ ...headerOptions, headerTitle: 'Items', headerBackTitle: 'Home' }} />
           <Stack.Screen name="item/[id]"     options={{ ...headerOptions, headerTitle: '' }} />
           <Stack.Screen name="boss/[id]"     options={{ ...headerOptions, headerTitle: '' }} />
           <Stack.Screen name="crafting/[id]" options={{ ...headerOptions, headerTitle: 'Craft Tree' }} />

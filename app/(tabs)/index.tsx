@@ -145,10 +145,13 @@ export default function HomeScreen() {
           <View style={styles.header}>
             <View>
               <Text style={styles.appTitle}>Terraria Wiki</Text>
-              <Text style={styles.appSubtitle}>Your complete companion</Text>
             </View>
             <View style={styles.headerIcon}>
-              <Ionicons name="planet-outline" size={28} color={colors.brand.accent} />
+              <Image
+                source={{ uri: 'https://terraria.wiki.gg/images/Guide.png' }}
+                style={styles.headerCharacter}
+                resizeMode="contain"
+              />
             </View>
           </View>
 
@@ -257,7 +260,7 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
   },
   appTitle: {
-    fontSize: 26,
+    fontSize: 34,
     fontWeight: '700',
     color: colors.text.primary,
     letterSpacing: -0.5,
@@ -276,6 +279,11 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     alignItems: 'center',
     justifyContent: 'center',
+    overflow: 'hidden',
+  },
+  headerCharacter: {
+    width: 36,
+    height: 36,
   },
 
   // Section header

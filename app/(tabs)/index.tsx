@@ -148,7 +148,7 @@ export default function HomeScreen() {
             </View>
             <View style={styles.headerIcon}>
               <Image
-                source={{ uri: 'https://terraria.wiki.gg/images/Guide.png' }}
+                  source={{ uri: 'https://terraria.wiki.gg/images/Guide.png' }}
                 style={styles.headerCharacter}
                 resizeMode="contain"
               />

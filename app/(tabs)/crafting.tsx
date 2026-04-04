@@ -1,12 +1,13 @@
 import { View, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { colors } from '../../src/theme/colors';
 
 export default function CraftingTab() {
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#1a1a2e' }}>
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text style={{ color: '#e8b84b', fontSize: 24 }}>Crafting</Text>
-        <Text style={{ color: '#a0a0b0', marginTop: 8 }}>Coming soon</Text>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.bg.primary }}>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+        <Text style={{ color: colors.text.primary, fontSize: 24, fontWeight: '700' }}>Craft</Text>
+        <Text style={{ color: colors.text.muted, fontSize: 14 }}>Your crafting list — coming soon</Text>
       </View>
     </SafeAreaView>
   );

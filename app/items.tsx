@@ -26,7 +26,6 @@ export default function ItemsTab() {
 
   return (
     <SafeAreaView style={styles.container} edges={[]}>
-      <Text style={styles.header}>Items</Text>
       <SearchBar value={query} onChangeText={setQuery} />
       <CategoryFilter selected={category} onSelect={setCategory} />
       <FlatList

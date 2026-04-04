@@ -9,12 +9,13 @@ import { colors } from '../../src/theme/colors';
 type IoniconsName = React.ComponentProps<typeof Ionicons>['name'];
 
 const TABS = [
-  { name: 'index',    label: 'Home',     icon: 'home',    iconOutline: 'home-outline' },
-  { name: 'crafting', label: 'Crafting', icon: 'hammer',  iconOutline: 'hammer-outline' },
-  { name: 'bosses',   label: 'Bosses',   icon: 'skull',   iconOutline: 'skull-outline' },
+  { name: 'progress', label: 'Progress', icon: 'trophy',   iconOutline: 'trophy-outline' },
+  { name: 'index',    label: 'Browse',   icon: 'compass',  iconOutline: 'compass-outline' },
+  { name: 'crafting', label: 'Craft',    icon: 'hammer',   iconOutline: 'hammer-outline' },
 ] as const;
 
-const PILL_WIDTH = 96;
+const BAR_HEIGHT = 64;
+const PILL_WIDTH = 112;
 const PILL_HEIGHT = 52;
 
 function CustomTabBar({ state, navigation }: any) {
@@ -29,32 +30,46 @@ function CustomTabBar({ state, navigation }: any) {
   useEffect(() => {
     Animated.spring(pillX, {
       toValue: state.index * tabWidth + (tabWidth - PILL_WIDTH) / 2,
-      damping: 26,
-      stiffness: 320,
+      damping: 28,
+      stiffness: 340,
       mass: 0.6,
       useNativeDriver: true,
     }).start();
   }, [state.index, tabWidth]);
 
-  const barHeight = 60 + insets.bottom;
+  const barHeight = BAR_HEIGHT + insets.bottom;
+  const pillTop = (BAR_HEIGHT - PILL_HEIGHT) / 2;
 
   return (
     <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: barHeight }}>
+      {/* Blurred background */}
       <BlurView
-        intensity={60}
+        intensity={80}
         tint="dark"
-        style={{ flex: 1, borderTopWidth: 0.5, borderTopColor: colors.border }}
+        style={{ flex: 1, borderTopWidth: 1, borderTopColor: colors.border }}
       />
+
+      {/* Accent glow line at top */}
+      <View style={{
+        position: 'absolute',
+        top: 0,
+        left: '15%',
+        right: '15%',
+        height: 1,
+        backgroundColor: colors.brand.accent + '40',
+      }} />
 
       {/* Sliding pill */}
       <Animated.View
         style={{
           position: 'absolute',
-          top: 8,
+          top: pillTop,
           width: PILL_WIDTH,
           height: PILL_HEIGHT,
-          borderRadius: 24,
-          backgroundColor: colors.brand.accent + '25',
+          borderRadius: 26,
+          backgroundColor: colors.brand.accent + '22',
+          borderWidth: 1,
+          borderColor: colors.brand.accent + '50',
           transform: [{ translateX: pillX }],
         }}
       />
@@ -65,7 +80,7 @@ function CustomTabBar({ state, navigation }: any) {
         top: 0,
         left: 0,
         right: 0,
-        height: 68,
+        height: BAR_HEIGHT,
         flexDirection: 'row',
       }}>
         {TABS.map((tab, index) => {
@@ -78,8 +93,7 @@ function CustomTabBar({ state, navigation }: any) {
                 flex: 1,
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: 3,
-                paddingTop: 8,
+                gap: 4,
               }}
             >
               <Ionicons
@@ -89,8 +103,9 @@ function CustomTabBar({ state, navigation }: any) {
               />
               <Text style={{
                 fontSize: 11,
-                fontWeight: focused ? '600' : '500',
+                fontWeight: focused ? '700' : '500',
                 color: focused ? colors.brand.accent : colors.text.muted,
+                letterSpacing: 0.3,
               }}>
                 {tab.label}
               </Text>
@@ -108,9 +123,9 @@ export default function TabLayout() {
       tabBar={(props) => <CustomTabBar {...props} />}
       screenOptions={{ headerShown: false }}
     >
-      <Tabs.Screen name="index"    options={{ title: 'Home' }} />
-      <Tabs.Screen name="crafting" options={{ title: 'Crafting' }} />
-      <Tabs.Screen name="bosses"   options={{ title: 'Bosses' }} />
+      <Tabs.Screen name="progress" options={{ title: 'Progress' }} />
+      <Tabs.Screen name="index"    options={{ title: 'Browse' }} />
+      <Tabs.Screen name="crafting" options={{ title: 'Craft' }} />
     </Tabs>
   );
 }

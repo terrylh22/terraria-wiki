@@ -34,7 +34,7 @@ export default function ItemsTab() {
         renderItem={({ item }: { item: ItemIndex }) => <ItemCard item={item} />}
         keyExtractor={(item) => String(item.id)}
         keyboardShouldPersistTaps="handled"
-        getItemLayout={(_, index) => ({ length: 57, offset: 57 * index, index })}
+        getItemLayout={(_, index) => ({ length: 72, offset: 72 * index, index })}
         ListEmptyComponent={
           <View style={styles.empty}>
             <Text style={styles.emptyText}>No items found</Text>

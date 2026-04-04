@@ -15,16 +15,18 @@ export const ItemCard = memo(function ItemCard({ item }: ItemCardProps) {
   return (
     <Pressable
       onPress={() => router.push(`/item/${item.id}`)}
-      style={({ pressed }) => [styles.container, pressed && styles.pressed]}
+      style={({ pressed }) => pressed && styles.pressed}
     >
-      <WikiImage wikiSlug={item.wikiSlug} size={36} />
-      <View style={styles.info}>
-        <Text style={styles.name} numberOfLines={1}>
-          {item.name}
-        </Text>
-        <Text style={styles.category}>{item.category}</Text>
+      <View style={styles.container}>
+        <WikiImage wikiSlug={item.wikiSlug} size={44} />
+        <View style={styles.info}>
+          <Text style={styles.name} numberOfLines={1}>
+            {item.name}
+          </Text>
+          <Text style={styles.category}>{item.category}</Text>
+        </View>
+        <View style={[styles.rarityDot, { backgroundColor: rarityColor }]} />
       </View>
-      <View style={[styles.rarityDot, { backgroundColor: rarityColor }]} />
     </Pressable>
   );
 });
@@ -33,11 +35,11 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 10,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.border,
-    gap: 12,
+    gap: 14,
   },
   pressed: {
     backgroundColor: colors.bg.surface,
@@ -47,13 +49,13 @@ const styles = StyleSheet.create({
   },
   name: {
     color: colors.text.primary,
-    fontSize: 15,
+    fontSize: 17,
     fontWeight: '500',
   },
   category: {
     color: colors.text.muted,
-    fontSize: 12,
-    marginTop: 2,
+    fontSize: 13,
+    marginTop: 3,
   },
   rarityDot: {
     width: 8,

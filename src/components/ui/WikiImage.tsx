@@ -12,13 +12,11 @@ export function WikiImage({ wikiSlug, size = 32, style }: WikiImageProps) {
   const uri = wikiImageUrl(wikiSlug);
 
   return (
-    <View style={[{ width: size, height: size }, style]}>
+    <View style={[{ width: size, height: size, padding: 4, backgroundColor: '#1e1e2a', borderRadius: 6 }, style]}>
       <Image
         source={{ uri }}
-        style={{ width: size, height: size }}
+        style={{ width: size - 8, height: size - 8 }}
         resizeMode="contain"
-        onError={(e) => console.log('[WikiImage] error', wikiSlug, e.nativeEvent.error)}
-        onLoad={() => console.log('[WikiImage] loaded', wikiSlug)}
       />
     </View>
   );

@@ -1,12 +1,11 @@
 export const colors = {
   bg: {
-    primary: '#1a1a2e',
-    secondary: '#16213e',
-    surface: '#0f3460',
+    primary: '#111118',
+    secondary: '#1a1a24',
+    surface: '#22222e',
   },
   brand: {
-    gold: '#e8b84b',
-    silver: '#c0c0c0',
+    accent: '#a78bfa',
   },
   rarity: {
     [-1]: '#828282',
@@ -28,7 +27,7 @@ export const colors = {
     secondary: '#a0a0b0',
     muted: '#666680',
   },
-  border: '#2a2a4a',
+  border: '#2e2e3e',
 } as const;
 
 export const rarityNames: Record<number, string> = {

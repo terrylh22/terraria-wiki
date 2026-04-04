@@ -19,6 +19,9 @@ export function useItemSearch(): ItemIndex[] {
       results = [...index];
     }
 
+    // Drop items with no name (bad data from raw source)
+    results = results.filter((item) => !!item.name);
+
     // Filter by category
     if (category !== 'all') {
       results = results.filter((item) => item.category === category);

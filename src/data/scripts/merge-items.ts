@@ -93,6 +93,7 @@ for (const [file, category] of Object.entries(FILE_CATEGORY)) {
     seen.add(id);
 
     const name: string = entry['Name'] ?? '';
+    if (!name) continue;
 
     const item: TerrariaItem = {
       id,

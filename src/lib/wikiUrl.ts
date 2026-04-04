@@ -4,5 +4,5 @@
  * internal hash routing.
  */
 export function wikiImageUrl(wikiSlug: string): string {
-  return `https://terraria.wiki.gg/w/Special:FilePath/${wikiSlug}.png`;
+  return `https://terraria.wiki.gg/images/${wikiSlug}.png`;
 }

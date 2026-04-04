@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   qty: {
-    color: colors.brand.gold,
+    color: colors.brand.accent,
     fontSize: 13,
     fontWeight: '600',
   },
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   station: {
-    color: colors.brand.gold,
+    color: colors.brand.accent,
     fontSize: 12,
     fontWeight: '600',
   },

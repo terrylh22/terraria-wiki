@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Image } from 'expo-image';
+import { Image, View } from 'react-native';
 import { wikiImageUrl } from '../../lib/wikiUrl';
 
 interface WikiImageProps {
@@ -9,30 +8,16 @@ interface WikiImageProps {
   style?: object;
 }
 
-const placeholder = require('../../../assets/placeholder-item.png');
-
 export function WikiImage({ wikiSlug, size = 32, style }: WikiImageProps) {
   const uri = wikiImageUrl(wikiSlug);
 
   return (
-    <View style={[styles.container, { width: size, height: size }, style]}>
+    <View style={[{ width: size, height: size, padding: 4, backgroundColor: '#1e1e2a', borderRadius: 6 }, style]}>
       <Image
         source={{ uri }}
-        style={{ width: size, height: size }}
-        contentFit="contain"
-        placeholder={placeholder}
-        transition={150}
-        cachePolicy="disk"
-        // pixelated rendering for sprite art
-        // @ts-ignore — expo-image supports this on native
-        recyclingKey={wikiSlug}
+        style={{ width: size - 8, height: size - 8 }}
+        resizeMode="contain"
       />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    overflow: 'hidden',
-  },
-});

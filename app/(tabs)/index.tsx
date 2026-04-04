@@ -2,20 +2,20 @@ import React, { useMemo, useRef, useState } from 'react';
 import {
   Animated,
   FlatList,
+  Image,
   Keyboard,
   Pressable,
-  ScrollView,
   StyleSheet,
   Text,
   TextInput,
   View,
+  useWindowDimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useData } from '../../src/data/loaders/DataContext';
 import { useSearchStore } from '../../src/store';
-import { WikiImage } from '../../src/components/ui/WikiImage';
 import { ItemCard } from '../../src/components/items/ItemCard';
 import { colors } from '../../src/theme/colors';
 import { ItemCategory } from '../../src/types/common';
@@ -23,17 +23,13 @@ import { ItemIndex } from '../../src/types/item';
 
 type Category = ItemCategory | 'all';
 
-const CATEGORIES: { key: ItemCategory; label: string; icon: string }[] = [
-  { key: 'Weapon',    label: 'Weapons',     icon: 'flash-outline' },
-  { key: 'Armor',     label: 'Armor',       icon: 'shield-outline' },
-  { key: 'Accessory', label: 'Accessories', icon: 'diamond-outline' },
-  { key: 'Tool',      label: 'Tools',       icon: 'construct-outline' },
-  { key: 'Potion',    label: 'Potions',     icon: 'flask-outline' },
-  { key: 'Material',  label: 'Materials',   icon: 'cube-outline' },
-  { key: 'Ammo',      label: 'Ammo',        icon: 'send-outline' },
-  { key: 'Block',     label: 'Blocks',      icon: 'square-outline' },
-  { key: 'Furniture', label: 'Furniture',   icon: 'home-outline' },
-  { key: 'Other',     label: 'Other',       icon: 'help-circle-outline' },
+const MAIN_CATEGORIES: { key: ItemCategory; label: string; wikiSlug: string }[] = [
+  { key: 'Weapon',    label: 'Weapons',   wikiSlug: 'Meowmere' },
+  { key: 'Armor',     label: 'Armor',     wikiSlug: 'Solar_Flare_Helmet' },
+  { key: 'Accessory', label: 'Accessory', wikiSlug: 'Celestial_Shell' },
+  { key: 'Tool',      label: 'Tools',     wikiSlug: 'Vortex_Pickaxe' },
+  { key: 'Potion',    label: 'Potions',   wikiSlug: 'Super_Healing_Potion' },
+  { key: 'Material',  label: 'Materials', wikiSlug: 'Luminite_Bar' },
 ];
 
 function navigateToCategory(category: Category) {
@@ -43,7 +39,12 @@ function navigateToCategory(category: Category) {
 }
 
 export default function HomeScreen() {
-  const { index, items, fuse } = useData();
+  const { index, fuse } = useData();
+  const { width } = useWindowDimensions();
+  // Two columns with 16px padding on each side and a 10px gap between
+  const tileWidth = (width - 16 * 2 - 10) / 2;
+  const tileHeight = Math.round(tileWidth * 0.8);
+
   const [query, setQuery] = useState('');
   const [searching, setSearching] = useState(false);
   const [focused, setFocused] = useState(false);
@@ -58,13 +59,6 @@ export default function HomeScreen() {
     });
     return map;
   }, [index]);
-
-  const spotlight = useMemo(() => {
-    const pool = Array.from(items.values()).filter(
-      (i) => !!i.name && !!i.wikiSlug && i.rarity >= 4
-    );
-    return pool[Math.floor(Math.random() * pool.length)] ?? null;
-  }, [items]);
 
   const searchResults = useMemo((): ItemIndex[] => {
     if (!query.trim() || !fuse) return index.filter((i) => !!i.name);
@@ -125,8 +119,8 @@ export default function HomeScreen() {
         )}
       </View>
 
-      {/* Shared content area — results and home sit in the same space */}
-      <View style={{ flex: 1 }}>
+      {/* Shared content area */}
+      <View style={styles.contentArea}>
         {/* Search results */}
         <Animated.View
           pointerEvents={searching ? 'auto' : 'none'}
@@ -143,12 +137,9 @@ export default function HomeScreen() {
         </Animated.View>
 
         {/* Home content */}
-        <Animated.View style={{ flex: 1, opacity: homeOpacity }} pointerEvents={searching ? 'none' : 'auto'}>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentInset={{ bottom: 90 }}
-          contentContainerStyle={styles.scroll}
-          keyboardShouldPersistTaps="handled"
+        <Animated.View
+          style={[styles.homeView, { opacity: homeOpacity }]}
+          pointerEvents={searching ? 'none' : 'auto'}
         >
           {/* Header */}
           <View style={styles.header}>
@@ -161,68 +152,40 @@ export default function HomeScreen() {
             </View>
           </View>
 
-          {/* Browse */}
-          <Text style={styles.sectionLabel}>Browse</Text>
-          <View style={styles.categoryGrid}>
-            {CATEGORIES.map((cat) => (
-              <Pressable
-                key={cat.key}
-                style={({ pressed }) => [styles.categoryTile, pressed && styles.categoryTilePressed]}
-                onPress={() => navigateToCategory(cat.key)}
-              >
-                <View style={styles.categoryIcon}>
-                  <Ionicons name={cat.icon as any} size={26} color={colors.brand.accent} />
-                </View>
-                <Text style={styles.categoryName}>{cat.label}</Text>
-                <Text style={styles.categoryCount}>{counts[cat.key] ?? 0} items</Text>
-              </Pressable>
-            ))}
+          {/* Browse section label */}
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionLabel}>Browse</Text>
+            <Pressable onPress={() => navigateToCategory('all')}>
+              <Text style={styles.sectionLink}>See all</Text>
+            </Pressable>
           </View>
 
-          {/* Item Spotlight */}
-          {spotlight && (
-            <>
-              <Text style={styles.sectionLabel}>Item Spotlight</Text>
-              <Pressable
-                style={({ pressed }) => [styles.spotlightCard, pressed && styles.spotlightPressed]}
-                onPress={() => router.push(`/item/${spotlight.id}`)}
-              >
-                <WikiImage wikiSlug={spotlight.wikiSlug} size={64} />
-                <View style={styles.spotlightInfo}>
-                  <Text style={styles.spotlightName} numberOfLines={1}>{spotlight.name}</Text>
-                  <Text style={styles.spotlightCategory}>{spotlight.category}</Text>
-                  {spotlight.damage !== undefined && (
-                    <Text style={styles.spotlightStat}>
-                      {spotlight.damage} {spotlight.damageType ?? ''} dmg
-                    </Text>
-                  )}
-                  {spotlight.defense !== undefined && (
-                    <Text style={styles.spotlightStat}>{spotlight.defense} defense</Text>
-                  )}
-                </View>
-                <Ionicons name="chevron-forward" size={18} color={colors.text.muted} />
-              </Pressable>
-            </>
-          )}
-
-          {/* Coming Soon */}
-          <Text style={styles.sectionLabel}>Coming Soon</Text>
-          <View style={styles.comingSoonRow}>
-            {[
-              { icon: 'skull-outline', label: 'Boss\nChecklist' },
-              { icon: 'time-outline',  label: 'Recently\nViewed' },
-              { icon: 'bookmark-outline', label: 'Craft\nPlanner' },
-            ].map((item) => (
-              <View key={item.label} style={styles.comingSoonTile}>
-                <Ionicons name={item.icon as any} size={28} color={colors.text.muted} />
-                <Text style={styles.comingSoonName}>{item.label}</Text>
-                <View style={styles.lockBadge}>
-                  <Ionicons name="lock-closed" size={10} color={colors.text.muted} />
-                </View>
+          {/* 2×3 category grid — fills all remaining space */}
+          <View style={styles.categoryGrid}>
+            {[MAIN_CATEGORIES.slice(0, 2), MAIN_CATEGORIES.slice(2, 4), MAIN_CATEGORIES.slice(4, 6)].map((row, rowIdx) => (
+              <View key={rowIdx} style={styles.categoryRow}>
+                {row.map((cat) => (
+                  <Pressable
+                    key={cat.key}
+                    style={styles.categoryTileOuter}
+                    onPress={() => navigateToCategory(cat.key)}
+                  >
+                    {({ pressed }) => (
+                      <View style={[styles.categoryTile, { height: tileHeight }, pressed && styles.categoryTilePressed]}>
+                        <Image
+                          source={{ uri: `https://terraria.wiki.gg/images/${cat.wikiSlug}.png` }}
+                          style={styles.categoryImage}
+                          resizeMode="contain"
+                        />
+                        <Text style={styles.categoryName}>{cat.label}</Text>
+                        <Text style={styles.categoryCount}>{counts[cat.key] ?? 0} items</Text>
+                      </View>
+                    )}
+                  </Pressable>
+                ))}
               </View>
             ))}
           </View>
-        </ScrollView>
         </Animated.View>
       </View>
     </SafeAreaView>
@@ -275,11 +238,13 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
 
-  // Scroll content
-  scroll: {
-    paddingHorizontal: 16,
-    paddingTop: 8,
-    paddingBottom: 24,
+  // Content area
+  contentArea: {
+    flex: 1,
+  },
+  homeView: {
+    flex: 1,
+    flexDirection: 'column',
   },
 
   // Header
@@ -287,11 +252,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 20,
-    marginTop: 4,
+    paddingHorizontal: 16,
+    paddingTop: 8,
+    paddingBottom: 12,
   },
   appTitle: {
-    fontSize: 28,
+    fontSize: 26,
     fontWeight: '700',
     color: colors.text.primary,
     letterSpacing: -0.5,
@@ -302,9 +268,9 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   headerIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: 14,
+    width: 44,
+    height: 44,
+    borderRadius: 12,
     backgroundColor: colors.bg.surface,
     borderWidth: 1,
     borderColor: colors.border,
@@ -312,115 +278,66 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 
-  // Section label
+  // Section header
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    marginBottom: 10,
+  },
   sectionLabel: {
     fontSize: 11,
     fontWeight: '700',
     letterSpacing: 1.2,
     textTransform: 'uppercase',
     color: colors.text.muted,
-    marginBottom: 12,
+  },
+  sectionLink: {
+    fontSize: 13,
+    fontWeight: '500',
+    color: colors.brand.accent,
   },
 
-  // Category grid
+  // Category grid — 3 rows × 2 cols, tiles sized by screen width
   categoryGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
     gap: 10,
-    marginBottom: 32,
+    paddingHorizontal: 16,
+    paddingBottom: 100,
+  },
+  categoryRow: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  categoryTileOuter: {
+    flex: 1,
   },
   categoryTile: {
-    width: '47%',
+    alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: colors.bg.secondary,
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: 16,
-    padding: 16,
-    gap: 6,
+    borderRadius: 18,
+    gap: 10,
   },
   categoryTilePressed: {
     backgroundColor: colors.bg.surface,
     borderColor: colors.brand.accent + '55',
   },
-  categoryIcon: {
-    width: 44,
-    height: 44,
-    borderRadius: 12,
-    backgroundColor: colors.brand.accent + '18',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 4,
+  categoryImage: {
+    width: 64,
+    height: 64,
   },
   categoryName: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: '600',
     color: colors.text.primary,
+    textAlign: 'center',
   },
   categoryCount: {
-    fontSize: 12,
+    fontSize: 11,
     color: colors.text.muted,
-  },
-
-  // Spotlight
-  spotlightCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 14,
-    backgroundColor: colors.bg.secondary,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 32,
-  },
-  spotlightPressed: {
-    backgroundColor: colors.bg.surface,
-  },
-  spotlightInfo: {
-    flex: 1,
-    gap: 3,
-  },
-  spotlightName: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: colors.text.primary,
-  },
-  spotlightCategory: {
-    fontSize: 12,
-    color: colors.text.muted,
-  },
-  spotlightStat: {
-    fontSize: 13,
-    color: colors.brand.accent,
-    fontWeight: '500',
-    marginTop: 2,
-  },
-
-  // Coming soon
-  comingSoonRow: {
-    flexDirection: 'row',
-    gap: 10,
-  },
-  comingSoonTile: {
-    flex: 1,
-    backgroundColor: colors.bg.secondary,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 16,
-    padding: 16,
-    gap: 8,
-    opacity: 0.6,
-  },
-  comingSoonName: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: colors.text.secondary,
-    lineHeight: 18,
-  },
-  lockBadge: {
-    alignSelf: 'flex-start',
-    backgroundColor: colors.bg.surface,
-    borderRadius: 6,
-    padding: 4,
+    textAlign: 'center',
   },
 });

@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:terraria.wiki.gg)",
+      "Bash(curl -s https://api.github.com/repos/natan-dot-com/Terraria-Dataset/contents)",
+      "Bash(python3 -c \"import sys,json; [print\\(f[''''name''''], f[''''type'''']\\) for f in json.load\\(sys.stdin\\)]\")",
+      "Bash(curl -s https://api.github.com/repos/Carsmaniac/terraria-crafting-tree/contents)",
+      "Bash(curl -s https://api.github.com/repos/natan-dot-com/Terraria-Dataset/contents/json)",
+      "Bash(python3 -c \"import sys,json; [print\\(f[''''name''''], f[''''size'''']\\) for f in json.load\\(sys.stdin\\)]\")",
+      "Bash(curl -s https://raw.githubusercontent.com/Carsmaniac/terraria-crafting-tree/master/crafting-tree-items.json)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(type\\(d\\)\\); print\\(list\\(d.keys\\(\\)\\)[:10] if isinstance\\(d,dict\\) else d[:2]\\)\")",
+      "Bash(curl -s https://api.github.com/repos/natan-dot-com/Terraria-Dataset/git/trees/main?recursive=1)",
+      "Bash(python3 -c \":*)",
+      "Bash(curl -s https://api.github.com/repos/natan-dot-com/Terraria-Dataset/contents/json?ref=master)",
+      "Bash(python3 -c \"import sys,json; data=json.load\\(sys.stdin\\); [print\\(f[''''name''''], f.get\\(''''size'''',0\\)\\) for f in data]\")",
+      "Bash(curl -s https://api.github.com/repos/natan-dot-com/Terraria-Dataset/contents/json/items_data?ref=master)",
+      "Bash(curl -s https://api.github.com/repos/natan-dot-com/Terraria-Dataset/contents/json/npc_data?ref=master)",
+      "Bash(mkdir -p /Users/terryhowell/code/terraria-wiki/.claude/plans)",
+      "Bash(cp /Users/terryhowell/.claude/plans/floofy-sniffing-toast.md /Users/terryhowell/code/terraria-wiki/.claude/plans/terraria-wiki.md)",
+      "Bash(rm /Users/terryhowell/.claude/plans/floofy-sniffing-toast.md)",
+      "Bash(npx create-expo-app@latest . --template expo-template-blank-typescript)",
+      "Bash(npx expo:*)",
+      "Bash(npm install:*)",
+      "Bash(npx tsc:*)"
+    ]
+  }
+}

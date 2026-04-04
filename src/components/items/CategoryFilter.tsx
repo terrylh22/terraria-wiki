@@ -14,17 +14,17 @@ import { ItemCategory } from '../../types/common';
 type Category = ItemCategory | 'all';
 
 const CATEGORIES: { key: Category; label: string; icon: string }[] = [
-  { key: 'all',       label: 'All Items',   icon: 'apps-outline' },
-  { key: 'Weapon',    label: 'Weapons',     icon: 'flash-outline' },
-  { key: 'Armor',     label: 'Armor',       icon: 'shield-outline' },
-  { key: 'Accessory', label: 'Accessories', icon: 'diamond-outline' },
-  { key: 'Tool',      label: 'Tools',       icon: 'construct-outline' },
-  { key: 'Potion',    label: 'Potions',     icon: 'flask-outline' },
-  { key: 'Material',  label: 'Materials',   icon: 'cube-outline' },
-  { key: 'Ammo',      label: 'Ammo',        icon: 'send-outline' },
-  { key: 'Block',     label: 'Blocks',      icon: 'square-outline' },
-  { key: 'Furniture', label: 'Furniture',   icon: 'home-outline' },
-  { key: 'Other',     label: 'Other',       icon: 'help-circle-outline' },
+  { key: 'all',       label: 'All Items',  icon: 'apps-outline' },
+  { key: 'Weapon',    label: 'Weapons',    icon: 'flash-outline' },
+  { key: 'Armor',     label: 'Armor',      icon: 'shield-outline' },
+  { key: 'Accessory', label: 'Accessories',icon: 'diamond-outline' },
+  { key: 'Tool',      label: 'Tools',      icon: 'construct-outline' },
+  { key: 'Potion',    label: 'Potions',    icon: 'flask-outline' },
+  { key: 'Material',  label: 'Materials',  icon: 'cube-outline' },
+  { key: 'Ammo',      label: 'Ammo',       icon: 'send-outline' },
+  { key: 'Block',     label: 'Blocks',     icon: 'square-outline' },
+  { key: 'Furniture', label: 'Furniture',  icon: 'home-outline' },
+  { key: 'Other',     label: 'Other',      icon: 'help-circle-outline' },
 ];
 
 interface CategoryFilterProps {
@@ -42,15 +42,33 @@ export function CategoryFilter({ selected, onSelect }: CategoryFilterProps) {
   function openSheet() {
     setVisible(true);
     Animated.parallel([
-      Animated.timing(backdropOpacity, { toValue: 1, duration: 200, useNativeDriver: true }),
-      Animated.spring(sheetY, { toValue: 0, damping: 26, stiffness: 280, mass: 0.7, useNativeDriver: true }),
+      Animated.timing(backdropOpacity, {
+        toValue: 1,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+      Animated.spring(sheetY, {
+        toValue: 0,
+        damping: 26,
+        stiffness: 280,
+        mass: 0.7,
+        useNativeDriver: true,
+      }),
     ]).start();
   }
 
   function closeSheet(cat?: Category) {
     Animated.parallel([
-      Animated.timing(backdropOpacity, { toValue: 0, duration: 180, useNativeDriver: true }),
-      Animated.timing(sheetY, { toValue: 500, duration: 220, useNativeDriver: true }),
+      Animated.timing(backdropOpacity, {
+        toValue: 0,
+        duration: 180,
+        useNativeDriver: true,
+      }),
+      Animated.timing(sheetY, {
+        toValue: 500,
+        duration: 220,
+        useNativeDriver: true,
+      }),
     ]).start(() => {
       setVisible(false);
       if (cat !== undefined) onSelect(cat);
@@ -59,20 +77,25 @@ export function CategoryFilter({ selected, onSelect }: CategoryFilterProps) {
 
   return (
     <>
+      {/* Trigger button */}
       <Pressable onPress={openSheet} style={styles.trigger}>
         <Ionicons name="options-outline" size={16} color={colors.brand.accent} />
         <Text style={styles.triggerText}>{selectedLabel}</Text>
         <Ionicons name="chevron-down" size={14} color={colors.text.muted} />
       </Pressable>
 
+      {/* Sheet modal */}
       <Modal visible={visible} transparent animationType="none" onRequestClose={() => closeSheet()}>
+        {/* Backdrop */}
         <Animated.View style={[styles.backdrop, { opacity: backdropOpacity }]}>
           <Pressable style={StyleSheet.absoluteFill} onPress={() => closeSheet()} />
         </Animated.View>
 
+        {/* Sheet */}
         <Animated.View style={[styles.sheet, { transform: [{ translateY: sheetY }] }]}>
           <View style={styles.sheetHandle} />
           <Text style={styles.sheetTitle}>Filter by Category</Text>
+
           <View style={styles.grid}>
             {CATEGORIES.map((cat) => {
               const active = cat.key === selected;
@@ -161,7 +184,9 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   gridItem: {
-    width: '30%',
+    flex: 1,
+    minWidth: '28%',
+    maxWidth: '32%',
     alignItems: 'center',
     paddingVertical: 14,
     borderRadius: 14,

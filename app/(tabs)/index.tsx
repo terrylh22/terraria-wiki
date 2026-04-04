@@ -21,146 +21,35 @@ import { colors } from '../../src/theme/colors';
 import { ItemCategory } from '../../src/types/common';
 import { ItemIndex } from '../../src/types/item';
 
-type Category = ItemCategory | 'all';
+export default function ItemsTab() {
+  const { loading } = useData();
+  const { query, category, setQuery, setCategory } = useSearchStore();
+  const results = useItemSearch();
 
-const MAIN_CATEGORIES: { key: ItemCategory; label: string; wikiSlug: string }[] = [
-  { key: 'Weapon',    label: 'Weapons',   wikiSlug: 'Meowmere' },
-  { key: 'Armor',     label: 'Armor',     wikiSlug: 'Solar_Flare_Helmet' },
-  { key: 'Accessory', label: 'Accessory', wikiSlug: 'Celestial_Shell' },
-  { key: 'Tool',      label: 'Tools',     wikiSlug: 'Vortex_Pickaxe' },
-  { key: 'Potion',    label: 'Potions',   wikiSlug: 'Super_Healing_Potion' },
-  { key: 'Material',  label: 'Materials', wikiSlug: 'Luminite_Bar' },
-];
-
-function navigateToCategory(category: Category) {
-  useSearchStore.getState().setCategory(category);
-  useSearchStore.getState().setQuery('');
-  router.push('/items');
-}
-
-export default function HomeScreen() {
-  const { index, fuse } = useData();
-  const { width } = useWindowDimensions();
-  // Two columns with 16px padding on each side and a 10px gap between
-  const tileWidth = (width - 16 * 2 - 10) / 2;
-  const tileHeight = Math.round(tileWidth * 0.8);
-
-  const [query, setQuery] = useState('');
-  const [searching, setSearching] = useState(false);
-  const [focused, setFocused] = useState(false);
-  const inputRef = useRef<TextInput>(null);
-  const homeOpacity = useRef(new Animated.Value(1)).current;
-  const resultsOpacity = useRef(new Animated.Value(0)).current;
-
-  const counts = useMemo(() => {
-    const map: Partial<Record<ItemCategory, number>> = {};
-    index.filter((i) => !!i.name).forEach((i) => {
-      map[i.category] = (map[i.category] ?? 0) + 1;
-    });
-    return map;
-  }, [index]);
-
-  const searchResults = useMemo((): ItemIndex[] => {
-    if (!query.trim() || !fuse) return index.filter((i) => !!i.name);
-    return fuse.search(query).map((r) => r.item);
-  }, [query, fuse, index]);
-
-  function enterSearch() {
-    setSearching(true);
-    setFocused(true);
-    inputRef.current?.focus();
-    Animated.parallel([
-      Animated.timing(homeOpacity, { toValue: 0, duration: 180, useNativeDriver: true }),
-      Animated.timing(resultsOpacity, { toValue: 1, duration: 220, useNativeDriver: true }),
-    ]).start();
-  }
-
-  function exitSearch() {
-    Keyboard.dismiss();
-    setQuery('');
-    setSearching(false);
-    setFocused(false);
-    Animated.parallel([
-      Animated.timing(homeOpacity, { toValue: 1, duration: 200, useNativeDriver: true }),
-      Animated.timing(resultsOpacity, { toValue: 0, duration: 150, useNativeDriver: true }),
-    ]).start();
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.centered}>
+        <ActivityIndicator size="large" color={colors.brand.accent} />
+        <Text style={styles.loadingText}>Loading items...</Text>
+      </SafeAreaView>
+    );
   }
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      {/* Search bar — always visible */}
-      <View style={styles.searchRow}>
-        <View style={[styles.searchBar, focused && styles.searchBarFocused]}>
-          <Ionicons
-            name="search-outline"
-            size={16}
-            color={focused ? colors.brand.accent : colors.text.muted}
-          />
-          <TextInput
-            ref={inputRef}
-            style={styles.searchInput}
-            placeholder="Search items, weapons, armor..."
-            placeholderTextColor={colors.text.muted}
-            value={query}
-            onChangeText={setQuery}
-            onFocus={enterSearch}
-            returnKeyType="search"
-          />
-          {query.length > 0 && (
-            <Pressable onPress={() => setQuery('')}>
-              <Ionicons name="close-circle" size={16} color={colors.text.muted} />
-            </Pressable>
-          )}
-        </View>
-        {searching && (
-          <Pressable onPress={exitSearch} style={styles.cancelBtn}>
-            <Text style={styles.cancelText}>Cancel</Text>
-          </Pressable>
-        )}
-      </View>
-
-      {/* Shared content area */}
-      <View style={styles.contentArea}>
-        {/* Search results */}
-        <Animated.View
-          pointerEvents={searching ? 'auto' : 'none'}
-          style={[StyleSheet.absoluteFill, { opacity: resultsOpacity }]}
-        >
-          <FlatList
-            data={searchResults}
-            keyExtractor={(item) => String(item.id)}
-            renderItem={({ item }) => <ItemCard item={item} />}
-            keyboardShouldPersistTaps="handled"
-            contentInset={{ bottom: 90 }}
-            getItemLayout={(_, i) => ({ length: 65, offset: 65 * i, index: i })}
-          />
-        </Animated.View>
-
-        {/* Home content */}
-        <Animated.View
-          style={[styles.homeView, { opacity: homeOpacity }]}
-          pointerEvents={searching ? 'none' : 'auto'}
-        >
-          {/* Header */}
-          <View style={styles.header}>
-            <View>
-              <Text style={styles.appTitle}>Terraria Wiki</Text>
-            </View>
-            <View style={styles.headerIcon}>
-              <Image
-                source={{ uri: 'https://terraria.wiki.gg/images/Guide.png' }}
-                style={styles.headerCharacter}
-                resizeMode="contain"
-              />
-            </View>
-          </View>
-
-          {/* Browse section label */}
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionLabel}>Browse</Text>
-            <Pressable onPress={() => navigateToCategory('all')}>
-              <Text style={styles.sectionLink}>See all</Text>
-            </Pressable>
+      <Text style={styles.header}>Items</Text>
+      <SearchBar value={query} onChangeText={setQuery} />
+      <CategoryFilter selected={category} onSelect={setCategory} />
+      <FlatList
+        data={results}
+        renderItem={({ item }: { item: ItemIndex }) => <ItemCard item={item} />}
+        keyExtractor={(item) => String(item.id)}
+        keyboardShouldPersistTaps="handled"
+        contentInset={{ bottom: 84 }}
+        getItemLayout={(_, index) => ({ length: 72, offset: 72 * index, index })}
+        ListEmptyComponent={
+          <View style={styles.empty}>
+            <Text style={styles.emptyText}>No items found</Text>
           </View>
 
           {/* 2×3 category grid — fills all remaining space */}
@@ -252,9 +141,9 @@ const styles = StyleSheet.create({
 
   // Header
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    color: colors.brand.accent,
+    fontSize: 28,
+    fontWeight: '700',
     paddingHorizontal: 16,
     paddingTop: 8,
     paddingBottom: 12,

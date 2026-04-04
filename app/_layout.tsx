@@ -16,14 +16,13 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <DataProvider>
-        <StatusBar style="light" />
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="(tabs)" />
-          <Stack.Screen name="items"         options={{ ...headerOptions, headerTitle: 'Items', headerBackTitle: 'Home' }} />
-          <Stack.Screen name="item/[id]"     options={{ ...headerOptions, headerTitle: '' }} />
-          <Stack.Screen name="boss/[id]"     options={{ ...headerOptions, headerTitle: '' }} />
-          <Stack.Screen name="crafting/[id]" options={{ ...headerOptions, headerTitle: 'Craft Tree' }} />
-        </Stack>
+      <StatusBar style="light" />
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="item/[id]" options={{ ...headerOptions, headerTitle: '' }} />
+        <Stack.Screen name="boss/[id]" options={{ ...headerOptions, headerTitle: '' }} />
+        <Stack.Screen name="crafting/[id]" options={{ ...headerOptions, headerTitle: 'Craft Tree' }} />
+      </Stack>
       </DataProvider>
     </GestureHandlerRootView>
   );

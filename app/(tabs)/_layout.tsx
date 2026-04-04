@@ -9,9 +9,9 @@ import { colors } from '../../src/theme/colors';
 type IoniconsName = React.ComponentProps<typeof Ionicons>['name'];
 
 const TABS = [
-  { name: 'index',    label: 'Home',     icon: 'home',    iconOutline: 'home-outline' },
-  { name: 'crafting', label: 'Crafting', icon: 'hammer',  iconOutline: 'hammer-outline' },
-  { name: 'bosses',   label: 'Bosses',   icon: 'skull',   iconOutline: 'skull-outline' },
+  { name: 'index', label: 'Items', icon: 'apps', iconOutline: 'apps-outline' },
+  { name: 'crafting', label: 'Crafting', icon: 'hammer', iconOutline: 'hammer-outline' },
+  { name: 'bosses', label: 'Bosses', icon: 'skull', iconOutline: 'skull-outline' },
 ] as const;
 
 const PILL_WIDTH = 96;
@@ -36,6 +36,8 @@ function CustomTabBar({ state, navigation }: any) {
     }).start();
   }, [state.index, tabWidth]);
 
+  const pillStyle = { transform: [{ translateX: pillX }] };
+
   const barHeight = 60 + insets.bottom;
 
   return (
@@ -43,20 +45,26 @@ function CustomTabBar({ state, navigation }: any) {
       <BlurView
         intensity={60}
         tint="dark"
-        style={{ flex: 1, borderTopWidth: 0.5, borderTopColor: colors.border }}
+        style={{
+          flex: 1,
+          borderTopWidth: 0.5,
+          borderTopColor: colors.border,
+        }}
       />
 
       {/* Sliding pill */}
-      <Animated.View
-        style={{
-          position: 'absolute',
-          top: 8,
-          width: PILL_WIDTH,
-          height: PILL_HEIGHT,
-          borderRadius: 24,
-          backgroundColor: colors.brand.accent + '25',
-          transform: [{ translateX: pillX }],
-        }}
+      <Animated.View // sliding pill
+        style={[
+          {
+            position: 'absolute',
+            top: 8,
+            width: PILL_WIDTH,
+            height: PILL_HEIGHT,
+            borderRadius: 24,
+            backgroundColor: colors.brand.accent + '25',
+          },
+          pillStyle,
+        ]}
       />
 
       {/* Tab items */}
@@ -65,7 +73,7 @@ function CustomTabBar({ state, navigation }: any) {
         top: 0,
         left: 0,
         right: 0,
-        height: 68,
+        height: 60,
         flexDirection: 'row',
       }}>
         {TABS.map((tab, index) => {
@@ -106,11 +114,13 @@ export default function TabLayout() {
   return (
     <Tabs
       tabBar={(props) => <CustomTabBar {...props} />}
-      screenOptions={{ headerShown: false }}
+      screenOptions={{
+        headerShown: false,
+      }}
     >
-      <Tabs.Screen name="index"    options={{ title: 'Home' }} />
+      <Tabs.Screen name="index" options={{ title: 'Items' }} />
       <Tabs.Screen name="crafting" options={{ title: 'Crafting' }} />
-      <Tabs.Screen name="bosses"   options={{ title: 'Bosses' }} />
+      <Tabs.Screen name="bosses" options={{ title: 'Bosses' }} />
     </Tabs>
   );
 }

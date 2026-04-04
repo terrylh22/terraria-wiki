@@ -54,8 +54,8 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
   },
   pillActive: {
-    backgroundColor: colors.brand.gold,
-    borderColor: colors.brand.gold,
+    backgroundColor: colors.brand.accent,
+    borderColor: colors.brand.accent,
   },
   pillText: {
     color: colors.text.secondary,

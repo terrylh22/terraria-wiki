@@ -18,7 +18,7 @@ export default function ItemsTab() {
   if (loading) {
     return (
       <SafeAreaView style={styles.centered}>
-        <ActivityIndicator size="large" color={colors.brand.gold} />
+        <ActivityIndicator size="large" color={colors.brand.accent} />
         <Text style={styles.loadingText}>Loading items...</Text>
       </SafeAreaView>
     );
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   header: {
-    color: colors.brand.gold,
+    color: colors.brand.accent,
     fontSize: 28,
     fontWeight: '700',
     paddingHorizontal: 16,

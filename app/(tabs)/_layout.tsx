@@ -10,7 +10,7 @@ export default function TabLayout() {
           backgroundColor: colors.bg.secondary,
           borderTopColor: colors.border,
         },
-        tabBarActiveTintColor: colors.brand.gold,
+        tabBarActiveTintColor: colors.brand.accent,
         tabBarInactiveTintColor: colors.text.muted,
       }}
     >

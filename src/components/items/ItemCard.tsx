@@ -20,7 +20,9 @@ export const ItemCard = memo(function ItemCard({ item }: ItemCardProps) {
       <View style={styles.container}>
         <WikiImage wikiSlug={item.wikiSlug} size={44} />
         <View style={styles.info}>
-          <Text style={styles.name} numberOfLines={1}>{item.name}</Text>
+          <Text style={styles.name} numberOfLines={1}>
+            {item.name}
+          </Text>
           <Text style={styles.category}>{item.category}</Text>
         </View>
         <View style={[styles.rarityDot, { backgroundColor: rarityColor }]} />

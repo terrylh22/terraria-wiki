@@ -13,7 +13,7 @@ import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { router } from 'expo-router';
 import { useData } from '../../src/data/loaders/DataContext';
 import { useSearchStore } from '../../src/store';
-import { ItemCard } from '../../src/components/items/ItemCard';
+import { AnimatedItemCard } from '../../src/components/items/AnimatedItemCard';
 import { SearchBar } from '../../src/components/ui/SearchBar';
 import { colors } from '../../src/theme/colors';
 import { fonts } from '../../src/theme/fonts';
@@ -112,10 +112,9 @@ export default function HomeScreen() {
             <FlatList
               data={searchResults}
               keyExtractor={(item) => String(item.id)}
-              renderItem={({ item }) => <ItemCard item={item} />}
+              renderItem={({ item, index }) => <AnimatedItemCard item={item} index={index} />}
               keyboardShouldPersistTaps="handled"
               contentContainerStyle={{ paddingBottom: TAB_BAR_HEIGHT + insets.bottom + 20 }}
-              getItemLayout={(_, i) => ({ length: 65, offset: 65 * i, index: i })}
             />
           </View>
         ) : (

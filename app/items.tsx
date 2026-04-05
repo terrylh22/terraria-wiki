@@ -5,7 +5,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { SearchBar } from '../src/components/ui/SearchBar';
 import { CategoryFilter } from '../src/components/items/CategoryFilter';
-import { ItemCard } from '../src/components/items/ItemCard';
+import { AnimatedItemCard } from '../src/components/items/AnimatedItemCard';
 import { useData } from '../src/data/loaders/DataContext';
 import { useSearchStore } from '../src/store';
 import { useItemSearch } from '../src/hooks/useItemSearch';
@@ -40,10 +40,9 @@ export default function ItemsTab() {
       <FlatList
         style={{ flex: 1 }}
         data={results}
-        renderItem={({ item }: { item: ItemIndex }) => <ItemCard item={item} />}
+        renderItem={({ item, index }: { item: ItemIndex; index: number }) => <AnimatedItemCard item={item} index={index} />}
         keyExtractor={(item) => String(item.id)}
         keyboardShouldPersistTaps="handled"
-        getItemLayout={(_, index) => ({ length: 65, offset: 65 * index, index })}
         ListEmptyComponent={
           <View style={styles.empty}>
             <Text style={styles.emptyText}>No items found</Text>

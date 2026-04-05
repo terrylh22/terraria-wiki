@@ -127,7 +127,6 @@ const styles = StyleSheet.create({
   trigger: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginHorizontal: 16,
     marginBottom: 10,
     marginTop: 4,
     paddingHorizontal: 14,

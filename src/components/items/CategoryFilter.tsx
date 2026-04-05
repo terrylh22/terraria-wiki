@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../../theme/colors';
+import { fonts } from '../../theme/fonts';
 import { ItemCategory } from '../../types/common';
 
 type Category = ItemCategory | 'all';
@@ -141,7 +142,7 @@ const styles = StyleSheet.create({
     flex: 1,
     color: colors.text.primary,
     fontSize: 15,
-    fontWeight: '500',
+    fontFamily: fonts.medium,
   },
   backdrop: {
     ...StyleSheet.absoluteFillObject,
@@ -172,7 +173,7 @@ const styles = StyleSheet.create({
   sheetTitle: {
     color: colors.text.muted,
     fontSize: 12,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     letterSpacing: 1,
     textTransform: 'uppercase',
     marginBottom: 16,
@@ -201,11 +202,11 @@ const styles = StyleSheet.create({
   gridLabel: {
     color: colors.text.secondary,
     fontSize: 12,
-    fontWeight: '500',
+    fontFamily: fonts.medium,
     textAlign: 'center',
   },
   gridLabelActive: {
     color: colors.brand.accent,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
   },
 });

@@ -3,9 +3,11 @@ import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { DataProvider } from '../src/data/loaders/DataContext';
 import { colors } from '../src/theme/colors';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { fonts } from '../src/theme/fonts';
+import { View, Text, Pressable, StyleSheet, ActivityIndicator } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { useFonts, Nunito_400Regular, Nunito_500Medium, Nunito_600SemiBold, Nunito_700Bold, Nunito_800ExtraBold } from '@expo-google-fonts/nunito';
 import '../global.css';
 
 function CustomHeader({ title, backLabel, rightLabel }: { title?: string; backLabel?: string; rightLabel?: string }) {
@@ -43,14 +45,14 @@ const styles = StyleSheet.create({
   backLabel: {
     color: colors.brand.accent,
     fontSize: 22,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
   },
   title: {
     flex: 1,
     textAlign: 'center',
     color: colors.text.primary,
     fontSize: 17,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
   },
   headerRight: {
     minWidth: 80,
@@ -59,11 +61,27 @@ const styles = StyleSheet.create({
   rightLabel: {
     color: colors.brand.accent,
     fontSize: 22,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
   },
 });
 
 export default function RootLayout() {
+  const [fontsLoaded] = useFonts({
+    Nunito_400Regular,
+    Nunito_500Medium,
+    Nunito_600SemiBold,
+    Nunito_700Bold,
+    Nunito_800ExtraBold,
+  });
+
+  if (!fontsLoaded) {
+    return (
+      <View style={{ flex: 1, backgroundColor: colors.bg.primary, alignItems: 'center', justifyContent: 'center' }}>
+        <ActivityIndicator size="large" color={colors.brand.accent} />
+      </View>
+    );
+  }
+
   return (
     <GestureHandlerRootView style={{ flex: 1, backgroundColor: colors.bg.primary }}>
       <DataProvider>

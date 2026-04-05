@@ -3,6 +3,7 @@ import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import { WikiImage } from '../ui/WikiImage';
 import { colors } from '../../theme/colors';
+import { fonts } from '../../theme/fonts';
 import { ItemIndex } from '../../types/item';
 
 interface ItemCardProps {
@@ -50,11 +51,12 @@ const styles = StyleSheet.create({
   name: {
     color: colors.text.primary,
     fontSize: 17,
-    fontWeight: '500',
+    fontFamily: fonts.semiBold,
   },
   category: {
     color: colors.text.muted,
     fontSize: 13,
+    fontFamily: fonts.regular,
     marginTop: 3,
   },
   rarityDot: {

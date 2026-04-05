@@ -16,6 +16,7 @@ import { useSearchStore } from '../../src/store';
 import { ItemCard } from '../../src/components/items/ItemCard';
 import { SearchBar } from '../../src/components/ui/SearchBar';
 import { colors } from '../../src/theme/colors';
+import { fonts } from '../../src/theme/fonts';
 import { ItemCategory } from '../../src/types/common';
 import { ItemIndex } from '../../src/types/item';
 
@@ -78,7 +79,7 @@ export default function HomeScreen() {
       <SafeAreaView style={styles.container} edges={['top']}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.appTitle}>Terraria Wiki</Text>
+          <Text style={styles.appTitle}>terra<Text style={styles.appTitleAccent}>Guide</Text></Text>
           <View style={styles.headerIcon}>
             <Image
               source={{ uri: 'https://terraria.wiki.gg/images/Guide.png' }}
@@ -175,17 +176,16 @@ const styles = StyleSheet.create({
   },
   appTitle: {
     fontSize: 34,
-    fontWeight: '700',
+    fontFamily: fonts.extraBold,
     color: colors.text.primary,
     letterSpacing: -0.5,
+  },
+  appTitleAccent: {
+    color: colors.brand.accent,
   },
   headerIcon: {
     width: 44,
     height: 44,
-    borderRadius: 12,
-    backgroundColor: colors.bg.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
   cancelText: {
     color: colors.brand.accent,
     fontSize: 15,
-    fontWeight: '500',
+    fontFamily: fonts.medium,
   },
 
   // Section header
@@ -222,14 +222,14 @@ const styles = StyleSheet.create({
   },
   sectionLabel: {
     fontSize: 11,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
     letterSpacing: 1.2,
     textTransform: 'uppercase',
     color: colors.text.muted,
   },
   sectionLink: {
     fontSize: 13,
-    fontWeight: '500',
+    fontFamily: fonts.medium,
     color: colors.brand.accent,
   },
 
@@ -265,12 +265,13 @@ const styles = StyleSheet.create({
   },
   categoryName: {
     fontSize: 14,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     color: colors.text.primary,
     textAlign: 'center',
   },
   categoryCount: {
     fontSize: 11,
+    fontFamily: fonts.regular,
     color: colors.text.muted,
     textAlign: 'center',
   },

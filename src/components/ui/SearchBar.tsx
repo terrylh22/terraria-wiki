@@ -2,6 +2,7 @@ import React from 'react';
 import { View, TextInput, StyleSheet, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../../theme/colors';
+import { fonts } from '../../theme/fonts';
 
 interface SearchBarProps {
   value: string;
@@ -70,6 +71,7 @@ const styles = StyleSheet.create({
     flex: 1,
     color: colors.text.primary,
     fontSize: 15,
+    fontFamily: fonts.regular,
     padding: 0,
   },
 });

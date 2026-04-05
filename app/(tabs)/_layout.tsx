@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '../../src/theme/colors';
+import { fonts } from '../../src/theme/fonts';
 
 type IoniconsName = React.ComponentProps<typeof Ionicons>['name'];
 
@@ -103,7 +104,7 @@ function CustomTabBar({ state, navigation }: any) {
               />
               <Text style={{
                 fontSize: 11,
-                fontWeight: focused ? '700' : '500',
+                fontFamily: focused ? fonts.bold : fonts.medium,
                 color: focused ? colors.brand.accent : colors.text.muted,
                 letterSpacing: 0.3,
               }}>

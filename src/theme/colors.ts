@@ -23,9 +23,9 @@ export const colors = {
     [11]: '#b220ff',
   } as Record<number, string>,
   text: {
-    primary: '#e8e8e8',
-    secondary: '#a0a0b0',
-    muted: '#666680',
+    primary: '#dddde4',
+    secondary: '#9595a8',
+    muted: '#5e5e78',
   },
   border: '#2e2e3e',
 } as const;

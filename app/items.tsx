@@ -10,6 +10,7 @@ import { useData } from '../src/data/loaders/DataContext';
 import { useSearchStore } from '../src/store';
 import { useItemSearch } from '../src/hooks/useItemSearch';
 import { colors } from '../src/theme/colors';
+import { fonts } from '../src/theme/fonts';
 import { ItemIndex } from '../src/types/item';
 
 export default function ItemsTab() {
@@ -68,6 +69,7 @@ const styles = StyleSheet.create({
   loadingText: {
     color: colors.text.secondary,
     fontSize: 14,
+    fontFamily: fonts.regular,
   },
   controls: {
     paddingHorizontal: 16,
@@ -80,5 +82,6 @@ const styles = StyleSheet.create({
   emptyText: {
     color: colors.text.muted,
     fontSize: 16,
+    fontFamily: fonts.regular,
   },
 });

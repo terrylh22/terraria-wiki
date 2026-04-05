@@ -1,5 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, FlatList } from 'react-native';
+import {
+  View, Text, StyleSheet, ActivityIndicator, FlatList,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { SearchBar } from '../src/components/ui/SearchBar';
 import { CategoryFilter } from '../src/components/items/CategoryFilter';
@@ -25,15 +27,21 @@ export default function ItemsTab() {
   }
 
   return (
-    <SafeAreaView style={styles.container} edges={[]}>
-      <SearchBar value={query} onChangeText={setQuery} />
-      <CategoryFilter selected={category} onSelect={setCategory} />
+    <View style={styles.container}>
+      {/* Controls at top */}
+      <View style={styles.controls}>
+        <View style={{ flexDirection: 'row' }}>
+          <SearchBar value={query} onChangeText={setQuery} />
+        </View>
+        <CategoryFilter selected={category} onSelect={setCategory} />
+      </View>
+
       <FlatList
+        style={{ flex: 1 }}
         data={results}
         renderItem={({ item }: { item: ItemIndex }) => <ItemCard item={item} />}
         keyExtractor={(item) => String(item.id)}
         keyboardShouldPersistTaps="handled"
-        contentInset={{ bottom: 90 }}
         getItemLayout={(_, index) => ({ length: 65, offset: 65 * index, index })}
         ListEmptyComponent={
           <View style={styles.empty}>
@@ -41,7 +49,7 @@ export default function ItemsTab() {
           </View>
         }
       />
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -57,17 +65,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 12,
   },
-  header: {
-    color: colors.brand.accent,
-    fontSize: 28,
-    fontWeight: '700',
-    paddingHorizontal: 16,
-    paddingTop: 8,
-    paddingBottom: 4,
-  },
   loadingText: {
     color: colors.text.secondary,
     fontSize: 14,
+  },
+  controls: {
+    paddingHorizontal: 16,
+    paddingBottom: 4,
   },
   empty: {
     padding: 40,

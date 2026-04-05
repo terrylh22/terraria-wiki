@@ -1,22 +1,20 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
-  Animated,
   FlatList,
   Image,
   Keyboard,
   Pressable,
   StyleSheet,
   Text,
-  TextInput,
   View,
   useWindowDimensions,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
 import { useData } from '../../src/data/loaders/DataContext';
 import { useSearchStore } from '../../src/store';
 import { ItemCard } from '../../src/components/items/ItemCard';
+import { SearchBar } from '../../src/components/ui/SearchBar';
 import { colors } from '../../src/theme/colors';
 import { ItemCategory } from '../../src/types/common';
 import { ItemIndex } from '../../src/types/item';
@@ -38,19 +36,18 @@ function navigateToCategory(category: Category) {
   router.push('/items');
 }
 
+const TAB_BAR_HEIGHT = 64;
+
 export default function HomeScreen() {
   const { index, fuse } = useData();
   const { width } = useWindowDimensions();
-  // Two columns with 16px padding on each side and a 10px gap between
+  const insets = useSafeAreaInsets();
   const tileWidth = (width - 16 * 2 - 10) / 2;
   const tileHeight = Math.round(tileWidth * 0.8);
 
   const [query, setQuery] = useState('');
   const [searching, setSearching] = useState(false);
   const [focused, setFocused] = useState(false);
-  const inputRef = useRef<TextInput>(null);
-  const homeOpacity = useRef(new Animated.Value(1)).current;
-  const resultsOpacity = useRef(new Animated.Value(0)).current;
 
   const counts = useMemo(() => {
     const map: Partial<Record<ItemCategory, number>> = {};
@@ -68,11 +65,6 @@ export default function HomeScreen() {
   function enterSearch() {
     setSearching(true);
     setFocused(true);
-    inputRef.current?.focus();
-    Animated.parallel([
-      Animated.timing(homeOpacity, { toValue: 0, duration: 180, useNativeDriver: true }),
-      Animated.timing(resultsOpacity, { toValue: 1, duration: 220, useNativeDriver: true }),
-    ]).start();
   }
 
   function exitSearch() {
@@ -80,82 +72,54 @@ export default function HomeScreen() {
     setQuery('');
     setSearching(false);
     setFocused(false);
-    Animated.parallel([
-      Animated.timing(homeOpacity, { toValue: 1, duration: 200, useNativeDriver: true }),
-      Animated.timing(resultsOpacity, { toValue: 0, duration: 150, useNativeDriver: true }),
-    ]).start();
   }
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      {/* Search bar — always visible */}
-      <View style={styles.searchRow}>
-        <View style={[styles.searchBar, focused && styles.searchBarFocused]}>
-          <Ionicons
-            name="search-outline"
-            size={16}
-            color={focused ? colors.brand.accent : colors.text.muted}
-          />
-          <TextInput
-            ref={inputRef}
-            style={styles.searchInput}
-            placeholder="Search items, weapons, armor..."
-            placeholderTextColor={colors.text.muted}
+      <SafeAreaView style={styles.container} edges={['top']}>
+        {/* Header */}
+        <View style={styles.header}>
+          <Text style={styles.appTitle}>Terraria Wiki</Text>
+          <View style={styles.headerIcon}>
+            <Image
+              source={{ uri: 'https://terraria.wiki.gg/images/Guide.png' }}
+              style={styles.headerCharacter}
+              resizeMode="contain"
+            />
+          </View>
+        </View>
+
+        {/* Search bar at top */}
+        <View style={styles.searchRow}>
+          <SearchBar
             value={query}
             onChangeText={setQuery}
             onFocus={enterSearch}
-            returnKeyType="search"
+            onBlur={() => {}}
+            focused={focused}
+            placeholder="Search items, weapons, armor..."
           />
-          {query.length > 0 && (
-            <Pressable onPress={() => setQuery('')}>
-              <Ionicons name="close-circle" size={16} color={colors.text.muted} />
+          {searching && (
+            <Pressable onPress={exitSearch} style={styles.cancelBtn}>
+              <Text style={styles.cancelText}>Cancel</Text>
             </Pressable>
           )}
         </View>
-        {searching && (
-          <Pressable onPress={exitSearch} style={styles.cancelBtn}>
-            <Text style={styles.cancelText}>Cancel</Text>
-          </Pressable>
-        )}
-      </View>
 
-      {/* Shared content area */}
-      <View style={styles.contentArea}>
-        {/* Search results */}
-        <Animated.View
-          pointerEvents={searching ? 'auto' : 'none'}
-          style={[StyleSheet.absoluteFill, { opacity: resultsOpacity }]}
-        >
-          <FlatList
-            data={searchResults}
-            keyExtractor={(item) => String(item.id)}
-            renderItem={({ item }) => <ItemCard item={item} />}
-            keyboardShouldPersistTaps="handled"
-            contentInset={{ bottom: 90 }}
-            getItemLayout={(_, i) => ({ length: 65, offset: 65 * i, index: i })}
-          />
-        </Animated.View>
-
-        {/* Home content */}
-        <Animated.View
-          style={[styles.homeView, { opacity: homeOpacity }]}
-          pointerEvents={searching ? 'none' : 'auto'}
-        >
-          {/* Header */}
-          <View style={styles.header}>
-            <View>
-              <Text style={styles.appTitle}>Terraria Wiki</Text>
-            </View>
-            <View style={styles.headerIcon}>
-              <Image
-                  source={{ uri: 'https://terraria.wiki.gg/images/Guide.png' }}
-                style={styles.headerCharacter}
-                resizeMode="contain"
-              />
-            </View>
+        {/* Search results (shown when searching) */}
+        {searching ? (
+          <View style={{ flex: 1, backgroundColor: colors.bg.primary }}>
+            <FlatList
+              data={searchResults}
+              keyExtractor={(item) => String(item.id)}
+              renderItem={({ item }) => <ItemCard item={item} />}
+              keyboardShouldPersistTaps="handled"
+              contentContainerStyle={{ paddingBottom: TAB_BAR_HEIGHT + insets.bottom + 20 }}
+              getItemLayout={(_, i) => ({ length: 65, offset: 65 * i, index: i })}
+            />
           </View>
-
-          {/* Browse section label */}
+        ) : (
+        /* Home grid */
+        <View style={{ flex: 1 }}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionLabel}>Browse</Text>
             <Pressable onPress={() => navigateToCategory('all')}>
@@ -163,7 +127,6 @@ export default function HomeScreen() {
             </Pressable>
           </View>
 
-          {/* 2×3 category grid — fills all remaining space */}
           <View style={styles.categoryGrid}>
             {[MAIN_CATEGORIES.slice(0, 2), MAIN_CATEGORIES.slice(2, 4), MAIN_CATEGORIES.slice(4, 6)].map((row, rowIdx) => (
               <View key={rowIdx} style={styles.categoryRow}>
@@ -189,9 +152,9 @@ export default function HomeScreen() {
               </View>
             ))}
           </View>
-        </Animated.View>
-      </View>
-    </SafeAreaView>
+        </View>
+        )}
+      </SafeAreaView>
   );
 }
 
@@ -199,55 +162,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.bg.primary,
-  },
-
-  // Search
-  searchRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingTop: 8,
-    paddingBottom: 12,
-    gap: 10,
-  },
-  searchBar: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    backgroundColor: colors.bg.secondary,
-    borderWidth: 1.5,
-    borderColor: colors.border,
-    borderRadius: 14,
-    paddingHorizontal: 14,
-    paddingVertical: 11,
-  },
-  searchBarFocused: {
-    borderColor: colors.brand.accent,
-    backgroundColor: colors.brand.accent + '0e',
-  },
-  searchInput: {
-    flex: 1,
-    color: colors.text.primary,
-    fontSize: 15,
-    padding: 0,
-  },
-  cancelBtn: {
-    paddingVertical: 8,
-  },
-  cancelText: {
-    color: colors.brand.accent,
-    fontSize: 15,
-    fontWeight: '500',
-  },
-
-  // Content area
-  contentArea: {
-    flex: 1,
-  },
-  homeView: {
-    flex: 1,
-    flexDirection: 'column',
   },
 
   // Header
@@ -265,11 +179,6 @@ const styles = StyleSheet.create({
     color: colors.text.primary,
     letterSpacing: -0.5,
   },
-  appSubtitle: {
-    fontSize: 13,
-    color: colors.text.muted,
-    marginTop: 2,
-  },
   headerIcon: {
     width: 44,
     height: 44,
@@ -286,12 +195,29 @@ const styles = StyleSheet.create({
     height: 36,
   },
 
+  // Search bar row
+  searchRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+  },
+  cancelBtn: {
+    paddingVertical: 8,
+    paddingLeft: 12,
+  },
+  cancelText: {
+    color: colors.brand.accent,
+    fontSize: 15,
+    fontWeight: '500',
+  },
+
   // Section header
   sectionHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
+    marginTop: 8,
     marginBottom: 10,
   },
   sectionLabel: {
@@ -307,11 +233,11 @@ const styles = StyleSheet.create({
     color: colors.brand.accent,
   },
 
-  // Category grid — 3 rows × 2 cols, tiles sized by screen width
+  // Category grid
   categoryGrid: {
     gap: 10,
     paddingHorizontal: 16,
-    paddingBottom: 100,
+    paddingBottom: 16,
   },
   categoryRow: {
     flexDirection: 'row',

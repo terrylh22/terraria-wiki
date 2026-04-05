@@ -13,7 +13,7 @@ function CustomHeader({ title, backLabel, rightLabel }: { title?: string; backLa
   return (
     <View style={[styles.header, { paddingTop: insets.top }]}>
       <Pressable style={styles.backBtn} onPress={() => router.back()}>
-        <Ionicons name="chevron-back" size={20} color={colors.brand.accent} />
+        <Ionicons name="chevron-back" size={26} color={colors.brand.accent} />
         {backLabel && <Text style={styles.backLabel}>{backLabel}</Text>}
       </Pressable>
       {title ? <Text style={styles.title}>{title}</Text> : <View style={{ flex: 1 }} />}
@@ -29,8 +29,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: colors.bg.primary,
-    borderBottomWidth: 0.5,
-    borderBottomColor: colors.border,
     paddingHorizontal: 12,
     paddingBottom: 10,
   },
@@ -44,7 +42,8 @@ const styles = StyleSheet.create({
   },
   backLabel: {
     color: colors.brand.accent,
-    fontSize: 16,
+    fontSize: 22,
+    fontWeight: '700',
   },
   title: {
     flex: 1,

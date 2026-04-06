@@ -12,7 +12,7 @@ export function WikiImage({ wikiSlug, size = 32, style }: WikiImageProps) {
   const uri = wikiImageUrl(wikiSlug);
 
   return (
-    <View style={[{ width: size, height: size, padding: 4, backgroundColor: '#1e1e2a', borderRadius: 6 }, style]}>
+    <View style={[{ width: size, height: size, padding: 4 }, style]}>
       <Image
         source={{ uri }}
         style={{ width: size - 8, height: size - 8 }}

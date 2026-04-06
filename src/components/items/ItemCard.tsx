@@ -16,18 +16,19 @@ export const ItemCard = memo(function ItemCard({ item }: ItemCardProps) {
   return (
     <Pressable
       onPress={() => router.push(`/item/${item.id}`)}
-      style={({ pressed }) => pressed && styles.pressed}
     >
-      <View style={styles.container}>
-        <WikiImage wikiSlug={item.wikiSlug} size={44} />
-        <View style={styles.info}>
-          <Text style={styles.name} numberOfLines={1}>
-            {item.name}
-          </Text>
-          <Text style={styles.category}>{item.category}</Text>
+      {({ pressed }) => (
+        <View style={[styles.container, pressed && styles.pressed]}>
+          <WikiImage wikiSlug={item.wikiSlug} size={44} />
+          <View style={styles.info}>
+            <Text style={styles.name} numberOfLines={1}>
+              {item.name}
+            </Text>
+            <Text style={styles.category}>{item.category}</Text>
+          </View>
+          <View style={[styles.rarityDot, { backgroundColor: rarityColor }]} />
         </View>
-        <View style={[styles.rarityDot, { backgroundColor: rarityColor }]} />
-      </View>
+      )}
     </Pressable>
   );
 });
@@ -43,7 +44,7 @@ const styles = StyleSheet.create({
     gap: 14,
   },
   pressed: {
-    backgroundColor: colors.bg.surface,
+    backgroundColor: '#2a2a3a',
   },
   info: {
     flex: 1,

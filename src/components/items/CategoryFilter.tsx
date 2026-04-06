@@ -35,6 +35,7 @@ interface CategoryFilterProps {
 
 export function CategoryFilter({ selected, onSelect }: CategoryFilterProps) {
   const [visible, setVisible] = useState(false);
+  const [pressed, setPressed] = useState(false);
   const backdropOpacity = useRef(new Animated.Value(0)).current;
   const sheetY = useRef(new Animated.Value(500)).current;
 
@@ -80,7 +81,12 @@ export function CategoryFilter({ selected, onSelect }: CategoryFilterProps) {
   return (
     <>
       {/* Trigger button */}
-      <Pressable onPress={openSheet} style={styles.trigger}>
+      <Pressable
+        onPress={openSheet}
+        onPressIn={() => setPressed(true)}
+        onPressOut={() => setPressed(false)}
+        style={[styles.trigger, pressed && styles.triggerPressed]}
+      >
         <Ionicons name="options-outline" size={16} color={colors.brand.accent} />
         <Text style={styles.triggerText}>{selectedLabel}</Text>
         <Ionicons name="chevron-down" size={14} color={colors.text.muted} />
@@ -138,6 +144,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
     gap: 8,
+  },
+  triggerPressed: {
+    backgroundColor: colors.bg.surface,
   },
   triggerText: {
     flex: 1,

@@ -111,14 +111,18 @@ export function CategoryFilter({ selected, onSelect, onFilterStart }: CategoryFi
                   onPress={() => selectCategory(cat.key)}
                   style={[styles.gridItem, active && styles.gridItemActive]}
                 >
-                  <Ionicons
-                    name={cat.icon as any}
-                    size={24}
-                    color={active ? colors.brand.accent : colors.text.secondary}
-                  />
-                  <Text style={[styles.gridLabel, active && styles.gridLabelActive]}>
-                    {cat.label}
-                  </Text>
+                  {({ pressed: p }) => (
+                    <View style={[styles.gridItemInner, p && !active && styles.gridItemPressed]}>
+                      <Ionicons
+                        name={cat.icon as any}
+                        size={24}
+                        color={active ? colors.brand.accent : colors.text.secondary}
+                      />
+                      <Text style={[styles.gridLabel, active && styles.gridLabelActive]}>
+                        {cat.label}
+                      </Text>
+                    </View>
+                  )}
                 </Pressable>
               );
             })}
@@ -188,6 +192,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
     gap: 6,
+  },
+  gridItemInner: {
+    alignItems: 'center',
+    gap: 6,
+  },
+  gridItemPressed: {
+    opacity: 0.6,
   },
   gridItemActive: {
     borderColor: colors.brand.accent,

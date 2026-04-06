@@ -1,7 +1,7 @@
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Animated,
-  Modal,
+  Easing,
   Pressable,
   StyleSheet,
   Text,
@@ -31,86 +31,84 @@ const CATEGORIES: { key: Category; label: string; icon: string }[] = [
 interface CategoryFilterProps {
   selected: Category;
   onSelect: (cat: Category) => void;
+  onFilterStart?: () => void;
 }
 
-export function CategoryFilter({ selected, onSelect }: CategoryFilterProps) {
-  const [visible, setVisible] = useState(false);
+export function CategoryFilter({ selected, onSelect, onFilterStart }: CategoryFilterProps) {
+  const [expanded, setExpanded] = useState(false);
   const [pressed, setPressed] = useState(false);
-  const backdropOpacity = useRef(new Animated.Value(0)).current;
-  const sheetY = useRef(new Animated.Value(500)).current;
-
+  const gridOpacity = useRef(new Animated.Value(0)).current;
+  const labelOpacity = useRef(new Animated.Value(1)).current;
 
   const selectedLabel = CATEGORIES.find((c) => c.key === selected)?.label ?? 'All Items';
 
-  function openSheet() {
-    setVisible(true);
-    Animated.parallel([
-      Animated.timing(backdropOpacity, {
-        toValue: 1,
-        duration: 200,
-        useNativeDriver: true,
-      }),
-      Animated.spring(sheetY, {
-        toValue: 0,
-        damping: 26,
-        stiffness: 280,
-        mass: 0.7,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }
+  useEffect(() => {
+    Animated.timing(labelOpacity, {
+      toValue: 1,
+      duration: 200,
+      easing: Easing.out(Easing.quad),
+      useNativeDriver: true,
+    }).start();
+  }, [selected]);
 
-  function closeSheet(cat?: Category) {
-    Animated.parallel([
-      Animated.timing(backdropOpacity, {
+  const toggle = useCallback(() => {
+    if (expanded) {
+      Animated.timing(gridOpacity, {
         toValue: 0,
-        duration: 180,
+        duration: 150,
+        easing: Easing.out(Easing.quad),
         useNativeDriver: true,
-      }),
-      Animated.timing(sheetY, {
-        toValue: 500,
-        duration: 220,
+      }).start(() => setExpanded(false));
+    } else {
+      gridOpacity.setValue(0);
+      setExpanded(true);
+      Animated.timing(gridOpacity, {
+        toValue: 1,
+        duration: 250,
+        easing: Easing.out(Easing.exp),
         useNativeDriver: true,
-      }),
+      }).start();
+    }
+  }, [expanded]);
+
+  function selectCategory(cat: Category) {
+    onSelect(cat);
+    Animated.parallel([
+      Animated.timing(gridOpacity, { toValue: 0, duration: 150, useNativeDriver: true }),
+      Animated.timing(labelOpacity, { toValue: 0, duration: 100, useNativeDriver: true }),
     ]).start(() => {
-      setVisible(false);
-      if (cat !== undefined) onSelect(cat);
+      setExpanded(false);
     });
   }
 
   return (
-    <>
+    <View style={styles.wrapper}>
       {/* Trigger button */}
       <Pressable
-        onPress={openSheet}
+        onPress={toggle}
         onPressIn={() => setPressed(true)}
         onPressOut={() => setPressed(false)}
-        style={[styles.trigger, pressed && styles.triggerPressed]}
+        style={[styles.trigger, pressed && !expanded && styles.triggerPressed]}
       >
         <Ionicons name="options-outline" size={16} color={colors.brand.accent} />
-        <Text style={styles.triggerText}>{selectedLabel}</Text>
-        <Ionicons name="chevron-down" size={14} color={colors.text.muted} />
+        <Animated.Text style={[styles.triggerText, { opacity: labelOpacity }]}>{selectedLabel}</Animated.Text>
+        <Ionicons
+          name={expanded ? 'chevron-up' : 'chevron-down'}
+          size={14}
+          color={colors.text.muted}
+        />
       </Pressable>
 
-      {/* Sheet modal */}
-      <Modal visible={visible} transparent animationType="none" onRequestClose={() => closeSheet()}>
-        {/* Backdrop */}
-        <Animated.View style={[styles.backdrop, { opacity: backdropOpacity }]}>
-          <Pressable style={StyleSheet.absoluteFill} onPress={() => closeSheet()} />
-        </Animated.View>
-
-        {/* Sheet */}
-        <Animated.View style={[styles.sheet, { transform: [{ translateY: sheetY }] }]}>
-          <View style={styles.sheetHandle} />
-          <Text style={styles.sheetTitle}>Filter by Category</Text>
-
+      {/* Expandable grid — overlays the list below */}
+      {expanded && (
+        <Animated.View style={[styles.dropdown, { opacity: gridOpacity }]}>
           <View style={styles.grid}>
             {CATEGORIES.map((cat) => {
               const active = cat.key === selected;
               return (
                 <Pressable
                   key={cat.key}
-                  onPress={() => closeSheet(cat.key)}
+                  onPress={() => selectCategory(cat.key)}
                   style={[styles.gridItem, active && styles.gridItemActive]}
                 >
                   <Ionicons
@@ -126,17 +124,20 @@ export function CategoryFilter({ selected, onSelect }: CategoryFilterProps) {
             })}
           </View>
         </Animated.View>
-      </Modal>
-    </>
+      )}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  wrapper: {
+    marginBottom: 10,
+    marginTop: 4,
+    zIndex: 10,
+  },
   trigger: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
-    marginTop: 4,
     paddingHorizontal: 14,
     paddingVertical: 10,
     borderRadius: 12,
@@ -148,45 +149,28 @@ const styles = StyleSheet.create({
   triggerPressed: {
     backgroundColor: colors.bg.surface,
   },
+  dropdown: {
+    position: 'absolute',
+    top: '100%',
+    left: 0,
+    right: 0,
+    marginTop: 4,
+    backgroundColor: colors.bg.secondary,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.border,
+    padding: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.4,
+    shadowRadius: 16,
+    elevation: 12,
+  },
   triggerText: {
     flex: 1,
     color: colors.text.primary,
     fontSize: 15,
     fontFamily: fonts.medium,
-  },
-  backdrop: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.6)',
-  },
-  sheet: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: colors.bg.secondary,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    paddingTop: 12,
-    paddingHorizontal: 16,
-    paddingBottom: 40,
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
-  },
-  sheetHandle: {
-    width: 36,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: colors.border,
-    alignSelf: 'center',
-    marginBottom: 16,
-  },
-  sheetTitle: {
-    color: colors.text.muted,
-    fontSize: 12,
-    fontFamily: fonts.semiBold,
-    letterSpacing: 1,
-    textTransform: 'uppercase',
-    marginBottom: 16,
   },
   grid: {
     flexDirection: 'row',

@@ -144,7 +144,6 @@ export default function HomeScreen() {
                           resizeMode="contain"
                         />
                         <Text style={styles.categoryName}>{cat.label}</Text>
-                        <Text style={styles.categoryCount}>{counts[cat.key] ?? 0} items</Text>
                       </View>
                     )}
                   </Pressable>
@@ -246,32 +245,30 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   categoryTile: {
+    backgroundColor: colors.bg.secondary,
+    borderRadius: 18,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.bg.secondary,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 18,
-    gap: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.4,
+    shadowRadius: 12,
+    elevation: 8,
   },
   categoryTilePressed: {
     backgroundColor: colors.bg.surface,
-    borderColor: colors.brand.accent + '55',
   },
   categoryImage: {
-    width: 64,
-    height: 64,
+    width: 72,
+    height: 72,
+    marginBottom: 16,
   },
   categoryName: {
-    fontSize: 14,
-    fontFamily: fonts.semiBold,
-    color: colors.text.primary,
-    textAlign: 'center',
-  },
-  categoryCount: {
-    fontSize: 11,
-    fontFamily: fonts.regular,
-    color: colors.text.muted,
-    textAlign: 'center',
+    position: 'absolute',
+    bottom: 12,
+    left: 14,
+    fontSize: 18,
+    fontFamily: fonts.bold,
+    color: colors.brand.accent,
   },
 });

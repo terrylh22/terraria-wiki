@@ -5,6 +5,7 @@ import { DataProvider } from '../src/data/loaders/DataContext';
 import { colors } from '../src/theme/colors';
 import { fonts } from '../src/theme/fonts';
 import { View, Text, Pressable, StyleSheet, ActivityIndicator } from 'react-native';
+import { useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useFonts, Nunito_400Regular, Nunito_500Medium, Nunito_600SemiBold, Nunito_700Bold, Nunito_800ExtraBold } from '@expo-google-fonts/nunito';
@@ -12,10 +13,16 @@ import '../global.css';
 
 function CustomHeader({ title, backLabel, rightLabel }: { title?: string; backLabel?: string; rightLabel?: string }) {
   const insets = useSafeAreaInsets();
+  const [pressed, setPressed] = useState(false);
   return (
     <View style={[styles.header, { paddingTop: insets.top }]}>
-      <Pressable style={styles.backBtn} onPress={() => router.back()}>
-        <Ionicons name="chevron-back" size={26} color={colors.brand.accent} />
+      <Pressable
+        style={[styles.backBtn, pressed && styles.backBtnPressed]}
+        onPressIn={() => setPressed(true)}
+        onPressOut={() => setPressed(false)}
+        onPress={() => router.back()}
+      >
+        <Ionicons name="chevron-back" size={26} color={colors.text.secondary} />
         {backLabel && <Text style={styles.backLabel}>{backLabel}</Text>}
       </Pressable>
       {title ? <Text style={styles.title}>{title}</Text> : <View style={{ flex: 1 }} />}
@@ -31,37 +38,45 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: colors.bg.primary,
-    paddingHorizontal: 12,
-    paddingBottom: 10,
+    paddingHorizontal: 16,
+    paddingTop: 8,
+    paddingBottom: 12,
   },
   backBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 2,
-    paddingVertical: 6,
-    paddingRight: 12,
-    minWidth: 80,
+    gap: 4,
+    paddingVertical: 8,
+    paddingLeft: 6,
+    paddingRight: 14,
+    backgroundColor: colors.bg.surface,
+    borderRadius: 18,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  backBtnPressed: {
+    backgroundColor: '#2e2e3e',
   },
   backLabel: {
-    color: colors.brand.accent,
-    fontSize: 22,
-    fontFamily: fonts.bold,
+    color: colors.text.secondary,
+    fontSize: 20,
+    fontFamily: fonts.extraBold,
   },
   title: {
     flex: 1,
     textAlign: 'center',
     color: colors.text.primary,
-    fontSize: 17,
+    fontSize: 20,
     fontFamily: fonts.semiBold,
   },
   headerRight: {
-    minWidth: 80,
+    flex: 1,
     alignItems: 'flex-end',
   },
   rightLabel: {
     color: colors.brand.accent,
-    fontSize: 22,
-    fontFamily: fonts.bold,
+    fontSize: 34,
+    fontFamily: fonts.extraBold,
   },
 });
 

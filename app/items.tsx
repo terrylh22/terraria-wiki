@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
-  View, Text, StyleSheet, ActivityIndicator, FlatList,
+  View, Text, StyleSheet, ActivityIndicator, FlatList, Keyboard,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { SearchBar } from '../src/components/ui/SearchBar';
@@ -17,6 +17,7 @@ export default function ItemsTab() {
   const { loading } = useData();
   const { query, category, setQuery, setCategory } = useSearchStore();
   const results = useItemSearch();
+  const [focused, setFocused] = useState(false);
 
   if (loading) {
     return (
@@ -32,7 +33,14 @@ export default function ItemsTab() {
       {/* Controls at top */}
       <View style={styles.controls}>
         <View style={{ flexDirection: 'row' }}>
-          <SearchBar value={query} onChangeText={setQuery} />
+          <SearchBar
+            value={query}
+            onChangeText={setQuery}
+            onFocus={() => setFocused(true)}
+            onBlur={() => setFocused(false)}
+            focused={focused}
+            onCancel={() => { Keyboard.dismiss(); setQuery(''); setFocused(false); }}
+          />
         </View>
         <CategoryFilter selected={category} onSelect={setCategory} />
       </View>

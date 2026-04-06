@@ -98,12 +98,8 @@ export default function HomeScreen() {
             onBlur={() => {}}
             focused={focused}
             placeholder="Search items, weapons, armor..."
+            onCancel={exitSearch}
           />
-          {searching && (
-            <Pressable onPress={exitSearch} style={styles.cancelBtn}>
-              <Text style={styles.cancelText}>Cancel</Text>
-            </Pressable>
-          )}
         </View>
 
         {/* Search results (shown when searching) */}
@@ -198,15 +194,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 16,
-  },
-  cancelBtn: {
-    paddingVertical: 8,
-    paddingLeft: 12,
-  },
-  cancelText: {
-    color: colors.brand.accent,
-    fontSize: 15,
-    fontFamily: fonts.medium,
   },
 
   // Section header

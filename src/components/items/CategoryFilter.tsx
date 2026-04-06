@@ -38,6 +38,7 @@ export function CategoryFilter({ selected, onSelect }: CategoryFilterProps) {
   const backdropOpacity = useRef(new Animated.Value(0)).current;
   const sheetY = useRef(new Animated.Value(500)).current;
 
+
   const selectedLabel = CATEGORIES.find((c) => c.key === selected)?.label ?? 'All Items';
 
   function openSheet() {

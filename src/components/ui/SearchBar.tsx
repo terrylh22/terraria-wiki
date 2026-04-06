@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TextInput, StyleSheet, Pressable } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../../theme/colors';
 import { fonts } from '../../theme/fonts';
@@ -11,6 +11,7 @@ interface SearchBarProps {
   onFocus?: () => void;
   onBlur?: () => void;
   focused?: boolean;
+  onCancel?: () => void;
 }
 
 export function SearchBar({
@@ -20,6 +21,7 @@ export function SearchBar({
   onFocus,
   onBlur,
   focused = false,
+  onCancel,
 }: SearchBarProps) {
   return (
     <View style={[styles.container, focused && styles.containerFocused]}>
@@ -43,6 +45,11 @@ export function SearchBar({
       {value.length > 0 && (
         <Pressable onPress={() => onChangeText('')}>
           <Ionicons name="close-circle" size={16} color={colors.text.muted} />
+        </Pressable>
+      )}
+      {onCancel && focused && (
+        <Pressable onPress={onCancel} style={styles.cancelBtn}>
+          <Text style={styles.cancelText}>Cancel</Text>
         </Pressable>
       )}
     </View>
@@ -73,5 +80,13 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontFamily: fonts.regular,
     padding: 0,
+  },
+  cancelBtn: {
+    paddingLeft: 6,
+  },
+  cancelText: {
+    color: '#ff6b6b',
+    fontSize: 14,
+    fontFamily: fonts.semiBold,
   },
 });

@@ -32,7 +32,7 @@ export default function ItemsTab() {
     <View style={styles.container}>
       {/* Controls at top */}
       <View style={styles.controls}>
-        <View style={{ flexDirection: 'row' }}>
+        <View style={{ flexDirection: 'row', overflow: 'visible' }}>
           <SearchBar
             value={query}
             onChangeText={setQuery}
@@ -81,6 +81,8 @@ const styles = StyleSheet.create({
   controls: {
     paddingHorizontal: 16,
     paddingBottom: 4,
+    zIndex: 1,
+    overflow: 'visible',
   },
   empty: {
     padding: 40,

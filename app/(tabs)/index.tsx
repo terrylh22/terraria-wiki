@@ -173,6 +173,9 @@ const styles = StyleSheet.create({
     fontFamily: fonts.extraBold,
     color: colors.text.primary,
     letterSpacing: -0.5,
+    textShadowColor: '#000',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 6,
   },
   appTitleAccent: {
     color: colors.brand.accent,
@@ -194,6 +197,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 16,
+    zIndex: 1,
+    overflow: 'visible',
   },
 
   // Section header
@@ -256,6 +261,9 @@ const styles = StyleSheet.create({
     left: 14,
     fontSize: 18,
     fontFamily: fonts.bold,
-    color: colors.brand.accent,
+    color: colors.text.primary,
+    textShadowColor: '#000',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 4,
   },
 });

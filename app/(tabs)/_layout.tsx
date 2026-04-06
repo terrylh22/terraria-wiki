@@ -42,23 +42,17 @@ function CustomTabBar({ state, navigation }: any) {
   const pillTop = (BAR_HEIGHT - PILL_HEIGHT) / 2;
 
   return (
-    <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: barHeight }}>
-      {/* Blurred background */}
-      <BlurView
-        intensity={80}
-        tint="dark"
-        style={{ flex: 1, borderTopWidth: 1, borderTopColor: colors.border }}
+    <View style={{
+      position: 'absolute', bottom: 0, left: 0, right: 0, height: barHeight,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: -4 },
+      shadowOpacity: 0.3,
+      shadowRadius: 8,
+    }}>
+      {/* Solid dark background */}
+      <View
+        style={{ flex: 1, backgroundColor: colors.bg.secondary }}
       />
-
-      {/* Accent glow line at top */}
-      <View style={{
-        position: 'absolute',
-        top: 0,
-        left: '15%',
-        right: '15%',
-        height: 1,
-        backgroundColor: colors.brand.accent + '40',
-      }} />
 
       {/* Sliding pill */}
       <Animated.View
@@ -69,8 +63,7 @@ function CustomTabBar({ state, navigation }: any) {
           height: PILL_HEIGHT,
           borderRadius: 26,
           backgroundColor: colors.brand.accent + '22',
-          borderWidth: 1,
-          borderColor: colors.brand.accent + '50',
+          borderWidth: 0,
           transform: [{ translateX: pillX }],
         }}
       />
@@ -103,9 +96,9 @@ function CustomTabBar({ state, navigation }: any) {
                 color={focused ? colors.brand.accent : colors.text.muted}
               />
               <Text style={{
-                fontSize: 11,
+                fontSize: 13,
                 fontFamily: focused ? fonts.bold : fonts.medium,
-                color: focused ? colors.brand.accent : colors.text.muted,
+                color: focused ? colors.brand.accent : colors.text.secondary,
                 letterSpacing: 0.3,
               }}>
                 {tab.label}

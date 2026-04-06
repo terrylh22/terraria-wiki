@@ -6,7 +6,7 @@ import { ItemIndex } from '../../types/item';
 const MAX_STAGGER_INDEX = 15;
 const STAGGER_DELAY = 35;
 const DURATION = 350;
-const TRANSLATE_X = 60;
+const TRANSLATE_X = 20;
 
 interface AnimatedItemCardProps {
   item: ItemIndex;
